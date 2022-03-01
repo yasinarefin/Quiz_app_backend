@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from django.utils import timezone
+from Quiz.models import Quiz
 
 '''
 {
@@ -63,3 +64,15 @@ class AnswerSerializer(serializers.Serializer):
     quiz = serializers.CharField()
     question_count = serializers.IntegerField()
     answers = serializers.JSONField()
+
+
+class ParticipationSerializer(serializers.Serializer):
+    quiz = serializers.CharField()
+    user = serializers.CharField()
+    answers = serializers.JSONField()
+    score = serializers.SerializerMethodField()
+
+    def get_score(self, obj):
+        if Quiz.objects.get(quiz_id = obj.quiz).get_status != 'ended':
+            return -1 # if quiz is  running no score should be shown
+        return obj.score

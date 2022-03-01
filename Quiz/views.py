@@ -174,4 +174,21 @@ def participate(request):
 
         return Response({'message':'submitted'}, status=status.HTTP_200_OK)
 
+# get participation status 
+# include header Authorization and QuizID 
 
+@api_view(['GET'])
+def participation_status(request):
+    token = request.headers['Authorization']
+    user = security_tools.authenticate(token)
+    if user == None:
+        return Response({'message':'not logged in!'},status=status.HTTP_401_UNAUTHORIZED)
+
+    quiz_id = request.headers['QuizID']
+    try:
+        participation_obj = Participation.objects.get(user=user, quiz=Quiz.objects.get(quiz_id=quiz_id))
+        obj_ser = ParticipationSerializer(participation_obj)
+        return Response(obj_ser.data, status= status.HTTP_200_OK)
+    except:
+        pass
+    return Response({'message':'invalid data'}, status= status.HTTP_400_BAD_REQUEST)
