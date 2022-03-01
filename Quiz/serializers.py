@@ -65,7 +65,21 @@ class AnswerSerializer(serializers.Serializer):
     question_count = serializers.IntegerField()
     answers = serializers.JSONField()
 
-
+'''
+{
+    "quiz": "quiz",
+    "user": "yasin@gmail.com",
+    "answers": [
+        [
+            2
+        ],
+        [
+            0
+        ]
+    ],
+    "score": 8.0
+}
+'''
 class ParticipationSerializer(serializers.Serializer):
     quiz = serializers.CharField()
     user = serializers.CharField()

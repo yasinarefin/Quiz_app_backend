@@ -7,6 +7,7 @@ from Quiz.serializers import *
 from Quiz.models import Quiz, Question, Participation
 from django.utils import timezone
 from Authentication import security_tools
+from decimal import *
 
 # /quiz/view/<str:status>
 @api_view(['GET'])
@@ -162,8 +163,23 @@ def participate(request):
         print(corr_answer)
         print(answer)
         print(points)
-        if len(corr_answer) == len(answer) and set(corr_answer) == set(answer):
-            user_points += points
+        if question['type'] == 'sc':
+            if len(corr_answer) == len(answer) and set(corr_answer) == set(answer):
+                user_points += points
+        
+        if question['type'] == 'mc':
+            wrong_sel = 0
+            for i in answer:
+                print(i)
+                if i not in corr_answer:
+                    wrong_sel += 1
+            user_points += Decimal(points / 2**wrong_sel)
+
+        if question['type'] == 'inp':
+            print(answer)
+            if answer[0] in corr_answer:
+                user_points += points
+        
 
         print('sss', user_points)
 
